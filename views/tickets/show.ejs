@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1><%= ticket.title %> </h1>
+    <ul>
+        <li>Description: <%= ticket.description %> </li>
+        <li>Steps to reproduce: <%= ticket.reproduceBug %> </li>
+        <li>Status: <%= ticket.status %> </li>
+        <li>Classification: <%= ticket.classification %> </li>
+    </ul>
+    <form action="/tickets/<%=ticket._id%>?_method=DELETE" method="POST">
+        <button>Delete Ticket</button>
+    </form>
+    <a href="/tickets">All tickets</a>
+    <a href="/tickets/<%= ticket._id %>/edit">Edit Ticket</a>
+</body>
+</html>

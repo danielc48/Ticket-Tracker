@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Edit Ticket</h1>
+    <form action="/tickets/<%=ticket._id%>?_method=PUT" method="POST">
+        <div>
+            <label for="title">Title</label>
+            <input type="text" id="title" name="ticket[title]" value="<%=ticket.title%>">
+        </div>
+        <div>
+            <label for="description">Description</label>
+            <textarea name="ticket[description]" id="description" cols="30" rows="10"><%= ticket.description %> </textarea>
+        </div>
+        <div>
+            <label for="reproduceBug">Steps to reproduce bug</label>
+            <textarea name="ticket[reproduceBug]" id="reproduceBug" cols="30" rows="10"><%= ticket.reproduceBug %> </textarea>
+        </div>
+        <div>
+            <p>Status</p>
+            <input type="radio" id="open" name="ticket[status]" value="open" <%= ticket.status === 'open' ? 'checked="checked"' : '' %> >
+            <label for="open">Open</label><br>
+            <input type="radio" id="closed" name="ticket[status]" value="closed" <%= ticket.status === 'closed' ? 'checked="checked"' : '' %>>
+            <label for="closed">Closed</label><br>
+        </div>
+        <div>
+            <label for="classification">Classification</label>
+            <select name="ticket[classification]" id="classification">
+                <option value="unclassified" <%= ticket.classification === 'unclassified' ? 'selected="selected"' : '' %> >Unclassified</option>
+                <option value="approved" <%= ticket.classification === 'approved' ? 'selected="selected"' : '' %> >Approved</option>
+                <option value="unapproved" <%= ticket.classification === 'unapproved' ? 'selected="selected"' : '' %> >Unapproved</option>
+                <option value="duplicate" <%= ticket.classification === 'duplicate' ? 'selected="selected"' : '' %> >Duplicate</option>
+            </select>
+        </div>
+        <button>Submit</button>
+    </form>
+    <a href="/tickets">All tickets</a>
+</body>
+</html>
