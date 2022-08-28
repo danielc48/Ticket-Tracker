@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+<% layout('layouts/boilerplate') -%> 
     <h1>Edit Ticket</h1>
     <form action="/tickets/<%=ticket._id%>?_method=PUT" method="POST">
         <div>
@@ -36,9 +28,7 @@
                 <option value="unapproved" <%= ticket.classification === 'unapproved' ? 'selected="selected"' : '' %> >Unapproved</option>
                 <option value="duplicate" <%= ticket.classification === 'duplicate' ? 'selected="selected"' : '' %> >Duplicate</option>
             </select>
-        </div>
+        </div>`
         <button>Submit</button>
     </form>
     <a href="/tickets">All tickets</a>
-</body>
-</html>

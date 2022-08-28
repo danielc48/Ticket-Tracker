@@ -3,7 +3,7 @@ const path = require('path');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const Ticket = require('./models/ticket');
-const tickets = require('./seeds/tickets');
+const engine = require('ejs-mate');
 
 main().catch(err => console.log(err));
 
@@ -13,6 +13,7 @@ async function main() {
 
 const app = express();
 
+app.engine('ejs', engine)
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, '/views'))
 
