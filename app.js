@@ -6,7 +6,8 @@ const Ticket = require('./models/ticket');
 const engine = require('ejs-mate');
 const ExpressError = require('./utils/ExpressError')
 const catchAsync = require('./utils/catchAsync')
-const { ticketSchema } = require('./schemas')
+const { ticketSchema, commentSchema } = require('./schemas')
+const Comment = require('./models/comment')
 
 main().catch(err => console.log(err));
 
@@ -33,6 +34,16 @@ const validateTicket = (req,res,next) => {
   }
 }
 
+const validateComment = (req,res,next) => {
+  const {error} = commentSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map(el => el.message).join(',');
+    throw new ExpressError(400,msg);
+  } else {
+    next();
+  }
+}
+
 app.get('/', (req,res) => {
     res.render('tickets/home')
 })
@@ -55,7 +66,7 @@ app.post('/tickets', validateTicket, catchAsync(async (req,res) => {
 
 app.get('/tickets/:id', catchAsync(async (req,res) => {
   const { id } = req.params;
-  const ticket = await Ticket.findById(id);
+  const ticket = await Ticket.findById(id).populate('comments');
   res.render('tickets/show', {ticket})
 }))
 
@@ -76,6 +87,23 @@ app.delete('/tickets/:id', catchAsync(async (req,res) => {
   await Ticket.findByIdAndDelete(id);
   res.redirect('/tickets')
 }))
+
+app.post('/tickets/:id/comments', validateComment, catchAsync(async(req,res) => {
+  const {id} = req.params
+  const ticket = await Ticket.findById(id);
+  const comment = new Comment(req.body.comment);
+  ticket.comments.push(comment);
+  await comment.save();
+  await ticket.save();
+  res.redirect(`/tickets/${id}`);
+}))
+
+app.delete('/tickets/:id/comments/:commentId', async(req,res) => {
+  const {id, commentId} = req.params;
+  await Ticket.findByIdAndUpdate(id, {$pull: {comments: commentId}});
+  await Comment.findByIdAndDelete(commentId);
+  res.redirect(`/tickets/${id}`)
+})
 
 app.all('*', (req,res,next) => {
   next(new ExpressError(404, 'Page Not Found'))

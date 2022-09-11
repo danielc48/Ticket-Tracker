@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Comment = require('./comment')
 const Schema = mongoose.Schema;
 
 main().catch(err => console.log(err));
@@ -29,7 +30,27 @@ const ticketSchema = new Schema({
             type: String,
             enum: ['unclassified', 'approved', 'unapproved', 'duplicate'],
             default: 'unclassified'
-        }
+        },
+        date: {
+            type: Date,
+            default: Date.now
+        },
+        comments: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Comment'
+            }
+        ]
+})
+
+ticketSchema.post('findOneAndDelete', async function (doc) {
+    if (doc) {
+        await Comment.deleteMany({
+            _id: {
+                $in: doc.comments
+            }
+        })
+    }
 })
 
 module.exports = mongoose.model('Ticket', ticketSchema)

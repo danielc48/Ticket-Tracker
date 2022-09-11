@@ -9,3 +9,10 @@ module.exports.ticketSchema = Joi.object({
         classification: Joi.string()
     }).required()
 })
+
+module.exports.commentSchema = Joi.object({
+    comment: Joi.object({
+        body: Joi.string().required(),
+        date: Joi.date().iso()
+    }).required()
+})

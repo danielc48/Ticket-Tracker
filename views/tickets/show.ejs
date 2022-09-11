@@ -18,4 +18,28 @@
                   </div>
               </div>
         </div>
+        <div class="col-md-8 offset-2">
+            <h2>Leave a comment</h2>
+            <form action="/tickets/<%= ticket._id %>/comments" method="POST" class="mb-3 needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="body" class="form-label">Comment</label>
+                    <textarea name="comment[body]" id="body" cols="30" rows="10" class="form-control" required> </textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div> 
+                <button class="btn btn-success">Submit</button>
+            </form>
+            <% for(let comment of ticket.comments ) { %>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= comment.body %> </h5>
+                        <p class="card-text"><%= comment.date.toLocaleDateString() %> </p>
+                    </div>
+                    <form action="/tickets/<%= ticket._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </div>
+            <% } %>  
+        </div>
     </div>
