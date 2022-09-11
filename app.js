@@ -6,6 +6,7 @@ const Ticket = require('./models/ticket');
 const engine = require('ejs-mate');
 const ExpressError = require('./utils/ExpressError')
 const catchAsync = require('./utils/catchAsync')
+const { ticketSchema } = require('./schemas')
 
 main().catch(err => console.log(err));
 
@@ -22,6 +23,16 @@ app.set('views', path.join(__dirname, '/views'))
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 
+const validateTicket = (req,res,next) => {
+  const {error} = ticketSchema.validate(req.body)
+  if (error) {
+    const msg = error.details.map(el => el.message).join(',')
+    throw new ExpressError(400,msg)
+  } else {
+    next()
+  }
+}
+
 app.get('/', (req,res) => {
     res.render('tickets/home')
 })
@@ -35,8 +46,8 @@ app.get('/tickets/new', (req,res) => {
   res.render('tickets/new')
 })
 
-app.post('/tickets', catchAsync(async (req,res) => {
-    if(!req.body.tickets) throw new ExpressError(400, 'Invalid Ticket Data')
+app.post('/tickets', validateTicket, catchAsync(async (req,res) => {
+    // if(!req.body.ticket) throw new ExpressError(400, 'Invalid Ticket Data')
     const ticket = new Ticket(req.body.ticket)
     await ticket.save();
     res.redirect('/tickets')
@@ -54,7 +65,7 @@ app.get('/tickets/:id/edit', catchAsync(async (req,res) => {
   res.render('tickets/edit', {ticket})
 }))
 
-app.put('/tickets/:id', catchAsync(async (req,res) => {
+app.put('/tickets/:id', validateTicket, catchAsync(async (req,res) => {
   const { id } = req.params;
   const ticket = await Ticket.findByIdAndUpdate(id, {...req.body.ticket})
   res.redirect(`/tickets/${ticket.id}`)
