@@ -1,13 +1,21 @@
 <% layout('layouts/boilerplate') -%>
-    <h1><%= ticket.title %> </h1>
-    <ul>
-        <li>Description: <%= ticket.description %> </li>
-        <li>Steps to reproduce: <%= ticket.reproduceBug %> </li>
-        <li>Status: <%= ticket.status %> </li>
-        <li>Classification: <%= ticket.classification %> </li>
-    </ul>
-    <form action="/tickets/<%=ticket._id%>?_method=DELETE" method="POST">
-        <button>Delete Ticket</button>
-    </form>
-    <a href="/tickets">All tickets</a>
-    <a href="/tickets/<%= ticket._id %>/edit">Edit Ticket</a>
+    <div class="row">
+        <div class="col-md-8 offset-2">
+            <div class="card mb-3">
+                <div class="card-header">Ticket ID: <%= ticket.id %></div>
+                <div class="card-body text-dark">
+                  <h5 class="card-title"><%= ticket.title %> </h5>
+                  <p class="card-text"><%= ticket.description %></p>
+                </div>
+                <div class="card-body">
+                    Steps to reproduce: <%= ticket.reproduceBug %>
+                </div>
+                <div class="card-body">
+                    <form action="/tickets/<%=ticket._id%>?_method=DELETE" method="POST">
+                        <button class="btn btn-danger">Delete Ticket</button>
+                    </form>
+                    <a href="/tickets/<%= ticket._id %>/edit" class="btn btn-info">Edit Ticket</a>
+                  </div>
+              </div>
+        </div>
+    </div>
