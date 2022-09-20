@@ -24,6 +24,7 @@ router.post('/', validateComment, catchAsync(async(req,res) => {
   ticket.comments.push(comment);
   await comment.save();
   await ticket.save();
+  req.flash('success', 'Created new comment!')
   res.redirect(`/tickets/${id}`);
 }))
 
@@ -31,6 +32,7 @@ router.delete('/:commentId', async(req,res) => {
   const {id, commentId} = req.params;
   await Ticket.findByIdAndUpdate(id, {$pull: {comments: commentId}});
   await Comment.findByIdAndDelete(commentId);
+  req.flash('success', 'Deleted comment!')
   res.redirect(`/tickets/${id}`)
 })
 
